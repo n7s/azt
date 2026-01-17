@@ -329,7 +329,7 @@ class Align():
             self.remove_silence_without_falling_pitch()
             print(f"after remove_silence_without_falling_pitch: {len(self.silence_found)}")
             n_found=len(self.silence_found)
-            print(f"at threshhold {self.intensity_threshold:.2f}: {n_found} "
+            print(f"at threshold {self.intensity_threshold:.2f}: {n_found} "
                 f"matches found (of {n_total} total)")
             if self.intensity_threshold in self.intensity_dict:
                 print(f"Giving up, having tried (to find {self.target}) "
@@ -451,13 +451,13 @@ class Align():
         self.files.textgrid.write()
 class AlignWords(Align):
     def __init__(self,file_name,**kwargs):
-        self.silence_to_find_in_s=.075 #100 miliseconds
+        self.silence_to_find_in_s=.075 #100 milliseconds
         self.one_word=.1 #100ms, standard used by Praat
         self.attr_to_align='words'
         super().__init__(file_name=file_name, **kwargs)
 class AlignClauses(Align):
     def __init__(self,file_name,**kwargs):
-        self.silence_to_find_in_s=.2 #200 miliseconds
+        self.silence_to_find_in_s=.2 #200 milliseconds
         self.one_word=.2 #.1=100ms, standard used by Praat
         # self.silence_to_find_in_s=.3 #150 miliseconds
         self.attr_to_align='clauses'

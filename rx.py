@@ -335,7 +335,7 @@ class RegexDict(object):
         nS=group(priors + group(sout, **nocap) + '*?') + group(sin)
         if nxisfinal:
             nS=anchor(nS,anchorend=True)
-        else: #anchor the begining, not the end:
+        else: #anchor the beginning, not the end:
             nS=anchor(nS)
             # nS='^(?:'+priors+'(?:'+sout+')*?)('+sin+')'
         # log.info(f"Compiling {x}{n} regex {nS}")

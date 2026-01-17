@@ -1723,7 +1723,7 @@ class Scrollbar(Childof,Gridded,UI,tkinter.Scrollbar):
     def post_tk_init(self):
         super().post_tk_init()
     def __init__(self, parent, *args, **kwargs):
-        """set this befor gridded call"""
+        """set this before gridded call"""
         if 'orient' in kwargs and kwargs['orient']==tkinter.HORIZONTAL:
             kwargs['sticky']=kwargs.get('sticky',tkinter.E+tkinter.W)
         else:
@@ -2147,7 +2147,7 @@ class ScrollingFrame(Frame):
         """Make this a Frame, with all the inheritances, I need"""
         super().__init__(parent, *args, **kwargs)
         self.post_tk_init()
-        """We might want horizonal bars some day? (also below)"""
+        """We might want horizontal bars some day? (also below)"""
         if xscroll == True:
             xscrollbar = Scrollbar(self, orient=tkinter.HORIZONTAL,
                                             row=1, column=0
@@ -2169,7 +2169,7 @@ class ScrollingFrame(Frame):
                 setattr(self.canvas,attr,getattr(self.canvas.parent,attr))
         # inherit(self.canvas)
         """create a frame inside the canvas which will be scrolled with it
-        Everthing that should scroll should be a child of this frame"""
+        Everything that should scroll should be a child of this frame"""
         self.content = Frame(self.canvas)
         """This is needed for _configure_canvas"""
         self.content_id = self.canvas.create_window(0, 0, window=self.content,
@@ -2181,7 +2181,7 @@ class ScrollingFrame(Frame):
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
         """Make all this show up, and take up all the space in parent"""
         self.canvas.grid(row=0, column=0,sticky='nsew')
-        """We might want horizonal bars some day? (also above)"""
+        """We might want horizontal bars some day? (also above)"""
         if xscroll == True:
             xscrollbar.config(width=self.yscrollbarwidth)
             xscrollbar.config(background=self.theme.background)
@@ -2198,7 +2198,7 @@ class ScrollingFrame(Frame):
         self.content.bind('<Configure>', self._configure_interior)
         self.bind('<Visibility>', self.windowsize)
 class ScrollingButtonFrame(ScrollingFrame):
-    """This needs to go inside another frame, for accurrate grid placement"""
+    """This needs to go inside another frame, for accurate grid placement"""
     def reserve_kwargs(self,**kwargs):
         kwargs=ButtonFrame.reserve_kwargs(self,**kwargs)
         return kwargs
@@ -2269,8 +2269,8 @@ class ToolTip(object):
     def post_tk_init(self):
         super().post_tk_init()
     def __init__(self, widget, text=_("change this")):
-        self.waittime = 500     #miliseconds before showing tip
-        self.showtime = 2000    #miliseconds to show tip
+        self.waittime = 500     #milliseconds before showing tip
+        self.showtime = 2000    #milliseconds to show tip
         self.wraplength = 180   #pixels
         self.dispx = 25
         self.dispy = 20

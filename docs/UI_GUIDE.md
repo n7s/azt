@@ -42,14 +42,14 @@ The menu items above the line impact how [A-Z+T] looks at your database:
   - redo the syllable profile analysis or status file (no harm doing either of these, but they each take time)
 
 The menu items below the line have more to do with the sorting process:
-  - ad hoc sort groups (to analyze specific words, without respect to syllable profile)
+  - ad-hoc sort groups (to analyze specific words, without respect to syllable profile)
   - restart the sorting process
     - for words previously skipped
     - for a group previously verified
     - for groups previously marked distinct
 
-    [A-Z+T]:  https://github.com/kent-rasmussen/azt
-    [WeSay]:  https://software.sil.org/wesay/
-    [FLEx]: https://software.sil.org/fieldworks/
-    [LIFT]: https://code.google.com/archive/p/lift-standard/
-    [Praat]: https://www.fon.hum.uva.nl/praat/
+[A-Z+T]:  https://github.com/kent-rasmussen/azt
+[WeSay]:  https://software.sil.org/wesay/
+[FLEx]: https://software.sil.org/fieldworks/
+[LIFT]: https://code.google.com/archive/p/lift-standard/
+[Praat]: https://www.fon.hum.uva.nl/praat/

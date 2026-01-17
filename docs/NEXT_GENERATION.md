@@ -31,6 +31,6 @@ The sort process would then look like this:
     - click on any that don't belong to unsort it.
     - click "these are all the same" when that applies.
   - When not assigned, may select a group to verify (again).
-  - Additionally, at least one client would need to be able to nagivate from one task or slice to another.
+  - Additionally, at least one client would need to be able to navigate from one task or slice to another.
     - It may be a better option to separate different tasks into different client apps.
-This process could initially take place within the current A-Z+T infrastructure, if clicking on "Sort!" produces a server with its address displayed in a QR code, with which people could scan to load a relevant page (running react, or whatever) to do the sorting. This would then allow for the nultiple and contradictory sorting, within the framework already present.
+This process could initially take place within the current A-Z+T infrastructure, if clicking on "Sort!" produces a server with its address displayed in a QR code, with which people could scan to load a relevant page (running react, or whatever) to do the sorting. This would then allow for the multiple and contradictory sorting, within the framework already present.

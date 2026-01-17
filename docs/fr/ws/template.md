@@ -5,13 +5,13 @@
 ## Conditions préalables
 
 - [Conditions préalables généraux des ateliers](../WORKSHOPS.md#Prerequisites)
-- Measures à prendre pour le suivi des ateliers précédents
+- Mesures à prendre pour le suivi des ateliers précédents
 
 ## Buts
 
 -
 
-## Measures à prendre pour le suivi
+## Mesures à prendre pour le suivi
 
 -
 - Envoyez votre base de données à votre conseiller.

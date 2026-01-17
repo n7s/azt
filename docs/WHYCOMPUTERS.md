@@ -24,7 +24,7 @@ Perhaps the most important non-change for [A-Z+T](https://github.com/kent-rasmus
 
 ## Where [A-Z+T](https://github.com/kent-rasmussen/azt) is Better
 ### Scalability
-A number of the points below impact the amount of work that would normally be done by hand, and/or require more expertise. Insofar as [A-Z+T](https://github.com/kent-rasmussen/azt) provides people a path to productivity which alleviates those burdens, an [A-Z+T](https://github.com/kent-rasmussen/azt) workflow is more scaleable than one that depends on the constant presence of a linguistics expert, and/or someone comptetent in computers to record decisions (even just daily).
+A number of the points below impact the amount of work that would normally be done by hand, and/or require more expertise. Insofar as [A-Z+T](https://github.com/kent-rasmussen/azt) provides people a path to productivity which alleviates those burdens, an [A-Z+T](https://github.com/kent-rasmussen/azt) workflow is more scalable than one that depends on the constant presence of a linguistics expert, and/or someone competent in computers to record decisions (even just daily).
 
 ### Sorting and Filtering
 Apart from the sociological advantages of involving people in the sorting of cards, I have never heard of anyone who would prefer sorting a lexical database on physical cards if doing it on a computer were possible —so I think this advantage is clear. At a pen and paper workshop, one separates nouns and verbs initially, and maybe syllable profiles within those sortings. And maybe none of those sortings have to be done again, if you keep track of your piles. But any further sorting is done and undone by hand, each time it is done. No matter how many changes are made to the LIFT database, [A-Z+T](https://github.com/kent-rasmussen/azt) presents up to date and accurate data for each sorting, with minimal wait.
@@ -36,7 +36,7 @@ Apart from the sociological advantages of involving people in the sorting of car
 - we avoid altogether the process of going through each card, to mark it for which group it sorts into.
 - we avoid altogether the need to type all those card notations into another database later (another day, month, or year).
 - Essentially, as soon as a language judgment is made, it is put into the database, and is available to the analyst (who we assume is smart enough to not make too much of that data before it has been verified).
-- The process of sorting and verification is more interruptable without significant negative effects, like
+- The process of sorting and verification is more interruptible without significant negative effects, like
     - wind or animals disturbing piles of cards that were only partially sorted or not yet recorded
     - internet or power outages
 
@@ -52,7 +52,7 @@ The burden of processing (even two) hours of recordings into individual utteranc
 For instance, at the end of the five day beta test with Zulgo, we had 686 sound files, parsed, meaningfully named and stored in the repository, with links to each in the LIFT database. Recording these took significantly less time than the actual sorting of each of these framed words. Another two weeks brought the number to 3,157. And in four weeks of sorting and recording, the Chufie' did 2,669 recordings. Each of these recordings is named with relevant meta-data:
 - Lexical category
 - Frame Name (for recordings of tone sorting)
-- Unique sense id (32 character hexidecmal, uniquely identifying that sense in the whole [LIFT](https://code.google.com/archive/p/lift-standard/) database)
+- Unique sense id (32 character hexadecimal, uniquely identifying that sense in the whole [LIFT](https://code.google.com/archive/p/lift-standard/) database)
 - The field recorded: example, lexeme, citation or field (plural or imperative)
 
 [A-Z+T](https://github.com/kent-rasmussen/azt) includes options to augment an initial (and potentially very rough) word list collection to record citation or lexeme forms, or plural or imperative forms, if present. This means that the advantage of efficient recording can be had both before and after sorting words in tone frames.

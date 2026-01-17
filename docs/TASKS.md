@@ -1,5 +1,5 @@
 # Ordered Task List
-[A-Z+T] is now organized into a series of discrete tasks, which are divided into the two groups below. [Reports][REPORTS.md] can be accessed through a button on either page.
+[A-Z+T] is now organized into a series of discrete tasks, which are divided into the two groups below. [Reports](REPORTS.md) can be accessed through a button on either page.
 
 There is a chooser to help you stay focused on data collection or analysis, and with a button (upper right) to switch between them.
 

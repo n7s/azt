@@ -1737,7 +1737,7 @@ class StatusFrame(ui.Frame):
         # self.frame.update()
     def updateprogresstable(self):
         """This could be a method called in creation, then again when updates
-        are needed. I should controll activebackground and commands, setting
+        are needed. I should control activebackground and commands, setting
         and clering the one or the other, according to current settings.
         Maybe could iterate across all, maybe calculate the right column and row
         should access self.checks and self.profiles for indexes"""
@@ -3881,7 +3881,7 @@ class Settings(object):
             log.info(_("Maybe status/slices aren't set up yet."))
         # program['status'].makegroupok(wsorted=True)
     def setrefreshdelay(self):
-        """This sets the main window refresh delay, in miliseconds"""
+        """This sets the main window refresh delay, in milliseconds"""
         if (hasattr(program['taskchooser'].mainwindowis,'runwindow') and
                 program['taskchooser'].mainwindowis.runwindow.winfo_exists()):
             self.refreshdelay=10000 #ten seconds if working in another window
@@ -4199,7 +4199,7 @@ class TaskDressing(HasMenus,ui.Window):
                     "").format(changed=changed)
             t+=_("\n\nAnywhere you have sorted a group based on your "
             "old interpretation settings, you should sort/verify "
-            "that data again, as there is a possiblity that "
+            "that data again, as there is a possibility that "
             "you have mixed unrelated groups.").format(changed=changed)
             ui.Label(w.frame,text=t,wraplength=int(
                         self.frame.winfo_screenwidth()/2)).grid(row=1,column=0)
@@ -5415,7 +5415,7 @@ class TaskChooser(TaskDressing):
     minimum and optimum prerequisites for each. Based on these, it presents
     to the user a default (highest in hierarchy without optimum fulfilled)
     task on opening, and allows users to choose others (any with minimum
-    prequisites satisfied)."""
+    prerequisites satisfied)."""
     def tasktitle(self):
         if self.showreports:
             return _("Run Reports")
@@ -7593,7 +7593,7 @@ class WordCollection(Segments):
                 pady=self.runwindow.pady)
         # Run the above script (makewindow) for each language, analang first.
         # The user has a chance to enter a gloss for any gloss language
-        # already in the datbase, and to skip any as needed/desired.
+        # already in the database, and to skip any as needed/desired.
         for lang in [self.analang]+program['db'].glosslangs:
             if lang in self.runwindow.form:
                 continue #Someday: how to do monolingual form/gloss here
@@ -7879,7 +7879,7 @@ class WordCollection(Segments):
                 self.sense.collectionglosses=[i for i in
                                         str(self.sense.imgselectiondir).split('/')[-1].split('_')
                                         if not isinteger(i)]
-        self.wait(msg=_("Dowloading images from OpenClipart.org\n{glosses}"
+        self.wait(msg=_("Downloading images from OpenClipart.org\n{glosses}"
                         "").format(glosses=" ".join(self.sense.collectionglosses)),
                     cancellable=True)
         log.info(_("Glosses: {glosses}").format(glosses=self.sense.collectionglosses))
@@ -8671,7 +8671,7 @@ class Parse(Segments):
         log.info("Trying for parse with three forms")
         r=self.parser.threeforms()
         #This gives r= tuple to check, or 1 if skipped. no UI = no self.exit set
-        # log.info("reponse: {} ({})".format(r,type(r)))
+        # log.info("response: {} ({})".format(r,type(r)))
         if not r:
             log.info("Auto parsed {} with three forms (returned {})"
                     "".format(self.sense.id,r))
@@ -8739,7 +8739,7 @@ class Parse(Segments):
                 r=self.asksegmentsotherps()
                 assert r != 1
         except Exception as e:
-            log.info("Exeption: {}".format(e))
+            log.info("Exception: {}".format(e))
             self.asksegmentsnops()
         if not self.exited:
             self.submitparse()
@@ -9975,7 +9975,7 @@ class Sort(object):
                         "".format(vals))
             curvalue=None
         if curvalue == annogroup: #only update if starting w/ same value
-            # log.info(f"Confirmed curent verification group ‘{curvalue}’ "
+            # log.info(f"Confirmed current verification group ‘{curvalue}’ "
             #         f"matches annotation group ‘{curvalue}’")
             return True
         elif not curvalue:
@@ -10142,7 +10142,7 @@ class Sort(object):
         self.did['join']=False #runs multiple times, so clear here
         if self.to_distinguish():
             log.info("Running Join")
-            warnorcontinue(self.join()) #1 here is now done; did.join intenally
+            warnorcontinue(self.join()) #1 here is now done; did.join internally
             return
         """Up to this point, we sort into and out of (via verify) groups tracked
         by lift form annotations, and track groups marked as verified in lift
@@ -10234,7 +10234,7 @@ class Sort(object):
             next=_("check")
             fn=self.ncheck
         elif (ptosort or ptoverify) and True not in self.did.values():
-            # If there is a profile to do, but you havent done anything since
+            # If there is a profile to do, but you haven't done anything since
             # the last 'sort!' button press, then move on to the next profile.
             next=_("profile")
             fn=self.nprofile
@@ -11277,7 +11277,7 @@ class Report(object):
             output(window,r,text)
             if self.bylocation:
                 textout=list()
-                #This is better than checks, just whats there for this group
+                #This is better than checks, just what's there for this group
                 for check in self.analysis.valuesbygroupcheck[group]:
                     id=rx.id('x'+sectitle+check)
                     values=self.analysis.valuesbygroupcheck[group][check]
@@ -12373,7 +12373,7 @@ class Transcribe(Sound,Sort,TaskDressing):
             log.error(_("Missing either group or comparison, without value "
                         "specified; can't switch them."))
             return
-        log.info(_("Swtiching groups; using ‘{comp}’ for "
+        log.info(_("Switching groups; using ‘{comp}’ for "
                 "‘{group}’").format(comp=self.group_comparison, group=self.group))
         #actually change the data, not the group settings:
         #This method should go somewhere more reasonable:
@@ -12990,7 +12990,7 @@ class TranscribeT(Transcribe,Tone):
         local variables):"""
     def __init__(self, parent): #frame, filename=None
         self.switch_text=_("Switch transcriptions with this group")
-        self.switch_tt=_("This doesn't save the curent group")
+        self.switch_tt=_("This doesn't save the current group")
         Tone.__init__(self)
         self.glyphspossible=None
         Transcribe.__init__(self,parent)
@@ -13136,7 +13136,7 @@ class JoinUFgroups(Tone,TaskDressing):
             ErrorNotice(title=_("No draft UF groups found for {ps} words!"
                                 "").format(ps=ps),
                         text=_("You don't seem to have any analyzed {ps} groups "
-                        "to join/rename. Have you done a tone analyis for {ps} "
+                        "to join/rename. Have you done a tone analysis for {ps} "
                         "words?").format(ps=ps)
                         )
             return
@@ -14069,7 +14069,7 @@ class SortGroupButtonFrame(ui.Frame,_GroupButtonFrame):
         if canary.winfo_exists():
             self.canary=canary
         else:
-            log.error("Not setting non-existant canary {canary}; ".format(canary=canary))
+            log.error("Not setting non-existent canary {canary}; ".format(canary=canary))
     def getsenseofnode(self,node):
         if isinstance(node,lift.Example): #direct descendance
             self._sense=node.sense
@@ -14344,7 +14344,7 @@ class SortGlyphGroupButtonFrame(ui.Frame,_GroupButtonFrame):
                 i.canary=canary #select on group button select
             self.canary=canary #select on glyph button select
         else:
-            log.error(_("Not setting non-existant canary {canary}; ").format(canary=canary))
+            log.error(_("Not setting non-existent canary {canary}; ").format(canary=canary))
     def __init__(self, parent, task, **kwargs):
         self.task=task #the task/check OR the scrollingframe! use self.check.task
         self.group=kwargs.pop('group')
@@ -14352,7 +14352,7 @@ class SortGlyphGroupButtonFrame(ui.Frame,_GroupButtonFrame):
         log.info(_("Building SortGlyphGroupButtonFrame for {group}").format(group=self.group))
         # self.showtonegroup=kwargs.pop('showtonegroup',False)
         # self.alwaysrefreshable=kwargs.pop('alwaysrefreshable',False)
-        # self.remove_on_click=kwargs.pop('remove_on_click',False) #compatability
+        # self.remove_on_click=kwargs.pop('remove_on_click',False) #compatibility
         kwargs=ui.GridinGridded.promotegridbkwargs(True,**kwargs)
         # kwargs=ui.GridinGridded.remove_gridbkwargs(True,**kwargs)
         # for k in ['padx', 'pady']:
@@ -16120,7 +16120,7 @@ class Repository(object):
         if difftext and (not me or self.commitconfirm(difftext)):
             r=self.do([i for i in args if i is not None])
             return r
-        # if theres no diff, or I don't want to commit, still share commits:
+        # if there's no diff, or I don't want to commit, still share commits:
         return True
     def diff(self,cached=False):
         if not self.bare:
@@ -16350,7 +16350,7 @@ class Repository(object):
                     return self.findpresentremotes(firsttry=False)
                 else: #if still nothing, don't ask again on this run.
                     self.directorydontask=True
-                    return [] #must return an interable, in any case
+                    return [] #must return an iterable, in any case
             else:
                 return []
         else:

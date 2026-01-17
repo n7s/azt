@@ -5,7 +5,7 @@
 ## Conditions préalables
 
 - [Conditions préalables généraux des ateliers](../WORKSHOPS.md#Prerequisites)
-- Measures à prendre pour le suivi des ateliers précédents
+- Mesures à prendre pour le suivi des ateliers précédents
 
 ## Buts
 
@@ -13,7 +13,7 @@
 - Tester des cadres sur l'ensemble du processus de tri, sur un petit profil (~25 mots)
 - Enregistrez ces mots dans tous les contextes encadrés
 
-## Measures à prendre pour le suivi
+## Mesures à prendre pour le suivi
 
 - Trier les trois plus grands profils de syllabes pour les noms dans tous les cadres
 - Enregistrez tous ces mots dans tous les contextes encadrés

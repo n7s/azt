@@ -129,7 +129,7 @@ class LiftXML(object): #fns called outside of this class call self.nodes here.
         if machine:
             bits+=[langtags.machine_transcription_code]
         return ''.join(bits)
-    def audiolangname(self,lang=None,machine=False): #machine just keeps compatability
+    def audiolangname(self,lang=None,machine=False): #machine just keeps compatibility
         try:
             assert self.analang == lang, "Not asking for analang"
             return self.audiolang
@@ -181,7 +181,7 @@ class LiftXML(object): #fns called outside of this class call self.nodes here.
         self.reportdir=file.getreportdir(self.lift_home)
     def convert_langtag(self,current_lang,new_lang,new_already_ok=False):
         """This method is only for established databases who need to change
-        langauge codes, typically because of an error or underdifferentiated
+        language codes, typically because of an error or underdifferentiated
         code. It will only be available by manual calling in this module, not anywhere in the UI —at least until I can come up with a way to prevent
         its abuse.
         """
@@ -292,7 +292,7 @@ class LiftXML(object): #fns called outside of this class call self.nodes here.
     def makenewguid(self):
         from random import randint
         log.info("Making a new unique guid")
-        """f'{int:x}:' gives int in lowercase hexidecimal"""
+        """f'{int:x}:' gives int in lowercase hexadecimal"""
         def gimmeint():
             return f'{randint(0, 15):x}'
         def rxi(y):
@@ -1001,7 +1001,7 @@ class LiftXML(object): #fns called outside of this class call self.nodes here.
         <form lang="en"><text>toneinfo for sense.</text></form>
         </field>"""
     def addmediafields(self, node, url, lang,**kwargs):
-        """This fuction will add an XML node to the lift tree, like a new
+        """This function will add an XML node to the lift tree, like a new
         example field."""
         """The program should know before calling this, that there isn't
         already the relevant node --since it is agnostic of what is already
@@ -1029,7 +1029,7 @@ class LiftXML(object): #fns called outside of this class call self.nodes here.
             citation=Node(entry, tag='citation')
             citation.makeformnode(lang=lang,text=langform)
     def addpronunciationfields(self,**kwargs):
-        """This fuction will add an XML node to the lift tree, like a new
+        """This function will add an XML node to the lift tree, like a new
         pronunciation field."""
         """The program should know before calling this, that there isn't
         already the relevant node."""
@@ -1640,7 +1640,7 @@ class LiftXML(object): #fns called outside of this class call self.nodes here.
         c['pn'][2]=['ᵐb','ᵐp','ᵐv','ᵐf','ⁿd','ⁿt','ᵑg','ⁿg','ᵑg','ⁿk','ᵑk',
                     'ⁿj','ⁿs','ⁿz',
                 ]
-        self.hypotheticals=x={} #dict to put all hypothetical segements in, by category
+        self.hypotheticals=x={} #dict to put all hypothetical segments in, by category
         c['G']={1:['ẅ','y','Y','w','W']}
         c['N']={1:['m','M','n','ŋ','ɲ','ɱ','ɳ',#'N', messed with profiles
                     'ང', #/ŋa/
@@ -3103,7 +3103,7 @@ class Sense(Node,FieldParent):
         counts,actualkeys=self.getcvverificationkeys(ftype)
         # try:
         # except TypeError:
-        #     # print("Missing profile or verication dictionary; skipping")
+        #     # print("Missing profile or verification dictionary; skipping")
         #     return
         if check in actualkeys:
             return actualkeys[check]
@@ -3783,7 +3783,7 @@ class LiftURL():
             if self.targethead in f:
                 self.showtargetinhighestdecendance(i) #should get targethead
                     # return #only do this for the first you find (last placed).
-            else:#Continue here if target not a current level node decendent:
+            else:#Continue here if target not a current level node descendent:
                 self.showtargetinlowestancestry(i)
             # Either way, we finish by making the target tail, and leveling up.
         if self.targettail is not None:
@@ -3936,7 +3936,7 @@ class LiftURL():
         # log.info("parents of {}: {}".format(nodenames,plist))
         return plist
     def setattrsofnodes(self):
-        """These are atttributes we ask for, which require the field. This
+        """These are attributes we ask for, which require the field. This
         should not be used for an attribute that requires either of two fields
         (like glosslang, which doesn't require both gloss *and* definition)"""
         self.attrs={}
@@ -4019,7 +4019,7 @@ def pylanglegacy2(analang):
      return analang+'-py'
 def pylang(analang):
      return analang+'-x-py'
-def profilelang(analang,machine=False): #Machine for script compatability
+def profilelang(analang,machine=False): #Machine for script compatibility
      return analang+'-x-cvprofile'
 def quote(x):
     return "‘"+str(x)+"’"

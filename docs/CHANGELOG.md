@@ -35,7 +35,7 @@
 
 # Version 0.9.7
 - Substantial reworking of reports, which all now run in the background, and with improved initial placement of tables.
-- Git integration works, both for updating A-Z+T and for language data. If your data is in a git repository, A-Z+T can make automatic commits for you, as well as pull and push from/to a respository on flash drive for sharing.
+- Git integration works, both for updating A-Z+T and for language data. If your data is in a git repository, A-Z+T can make automatic commits for you, as well as pull and push from/to a repository on flash drive for sharing.
 
 # Version 0.9.4
 ## Zulgo workshop tweaks
@@ -58,7 +58,7 @@
 
 # Version 0.9.1
 - SILCAWL now converts template ps to local values
-- Set up ps sublcass to use '{}-infl-class'.format(self.kwargs['ps'] trait
+- Set up ps subclass to use '{}-infl-class'.format(self.kwargs['ps'] trait
 - Set up morphtype trait URL
 - Use button column variable to give up to three columns for sorting
 - fixed bug leaving old sound file links
@@ -181,7 +181,7 @@
 - fixed some syntax errors
 - fixed MS Windows Unicode issue
 - added user accessible switch between labels and buttons on the main screen (via context menu)
-- cleaned up exiting fuctions
+- cleaned up exiting functions
 - fixed recording filename problems
 - updated writing to lift file
 - updated references to updatestatus with appropriate updatestatuslift calls
@@ -209,7 +209,7 @@
 - included profile count in status table.
 - make refresh example button only appear if there are at least two examples to pick from
 - make status table into buttons for cells, which set profile and frame. (from CH)
-- fixed sort logic to exit on exit (moved on), including recursive joinT funtions
+- fixed sort logic to exit on exit (moved on), including recursive joinT functions
 - toneframetodo is now sensitive to the need to sort, as well as verification.
     - so "next frame" will give you the next frame with unsorted data, even if the known groups are all marked as verified.
 - gettonegroups now removes groups from the list of verified groups, if they aren't actually in the lift file.
@@ -231,7 +231,7 @@
 - quit after ten scroll frame configurations
 - For recording windows, added a "skip to next undone"
 - basic report includes co-ocurrance tables
-- fixed addframe button not showing up with longer defninitions (moved to left)
+- fixed addframe button not showing up with longer definitions (moved to left)
 - removed underlining in table headers (to italics)
 - Removed invalid from prioritized lists (of words to record, profiles to select)
 - removed function which was creating duplicate references to the same recording
@@ -419,7 +419,7 @@
     - includes data only once per Sn (not in V1 or V2 if in V1=V2, nor in C1 or C2 if in C1=C2)
     - repeats data selected for by another Sn (C1 and V1 both is OK, for CV profile)
 
-### Useability
+### Usability
 - only question required on first open (for now) is C,V,CV, or T; everything else has an initial assumed value (though still changeable through the menus).
 - `Record` button on main window, with unencombered icon
 - `checkcheck` picks the most numerous profile, along with it's ps.
@@ -435,7 +435,7 @@
 - Join dialog is now more intuitive: one window with a single reset frame on select, instructions ask user to select two groups (as opposed to one, then the other). The first selection sets the first variable (as before), but leaves text in place, now as a label --other buttons remain.
 
 ## bug fixes:
-### Useability
+### Usability
 
 - make all file open options with `encoding='utf-8'`
 - Fixed issue where `exit` sorted into last group; now just exits sorting.

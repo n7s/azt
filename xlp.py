@@ -95,7 +95,7 @@ class Report(object):
         doc.freeDoc()
         result.freeDoc()
 
-        note the need to explicitely deallocate documents with freeDoc() except for the stylesheet document which is freed when its compiled form is garbage collected.
+        note the need to explicitly deallocate documents with freeDoc() except for the stylesheet document which is freed when its compiled form is garbage collected.
         """
         self.transformsdir=file.gettransformsdir()
         dom = lxml.etree.parse(self.filename)

@@ -24,7 +24,7 @@ def doprofilesbyps(db):
     profiles.printprofilesbyps(db)
 def doprintwords(db):
     profiles.printwords(db)
-"""This fuctionality is in words()"""
+"""This functionality is in words()"""
 #def isguidinvaliddata(self,guid):
 #    """This checks to see if a guid is listed in the profile data"""
 #    x=0

@@ -62,7 +62,7 @@ def gen(nsyls=None): # i should add self here, for lift variable reference..
             for prof in profilestheoreticallist:
                 profilestheoretical.append(prof+syl)
     def debugnums():
-        log.info(_('logical possiblities generated: {}').format(len(list(profilestheoretical))))
+        log.info(_('logical possibilities generated: {}').format(len(list(profilestheoretical))))
         log.info(_('less repetitions: {}').format(len(list(dict.fromkeys(profilestheoretical)))))
     debugnums()
     return list(dict.fromkeys(profilestheoretical))
@@ -114,7 +114,7 @@ def words(db,profiles):
     guids=list()
     senseids=list()
     """Before doing anything else, find all the invalid entries."""
-    """yes, this puts these entries one level up, but theyre invalid, and
+    """yes, this puts these entries one level up, but they're invalid, and
     shouldn't depend on CV profile."""
     profile='Invalid'
     invalidguids=[]#db.guidsinvalid #list(output[profile].keys())

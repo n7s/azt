@@ -44,7 +44,7 @@ def langs(self):
 def count(self):
     """Return the number of occurrances of subcategories, for a given category.
     or perhaps just return the largest (unverified?) category....
-    probably wrap this into multiple scrips:
+    probably wrap this into multiple scripts:
     all categories
     all subcategories
     all unverified categories

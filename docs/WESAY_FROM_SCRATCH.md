@@ -12,7 +12,7 @@
   - Confirm your gloss language is there (e.g., English), or define it (E.g., French or anything else).
   - If you want them, set up an IPA, or any other language writing systems (Note: A-Z+T will only be analyzing the orthographic writing system). Be sure to make them have different abbreviations, so you can tell them apart.
 - In the `Fields` tab:
-  - For each of these, select the field on the left, and select which langauge(s) it should use on the right.
+  - For each of these, select the field on the left, and select which language(s) it should use on the right.
   - Select the box next to `Citation Form`, and make sure your orthographic writing system is the only one selected.
   - If you want to collect words using **French**, remove English from the `Definition` field (at least until your word collection is done).
   - Select the box next to `Gloss`, and make sure the correct gloss language is selected.

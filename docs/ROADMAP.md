@@ -22,7 +22,7 @@ Fill out tool tips for status frame lines
 
 Consider culling visible logic at the end of maybesort. Just do, maybe leave an ErrorNotice window, but keep going with the next sort (make a reasonable choice, and the user can go back and change, if desired.)
 - I don't think I want to move automatically between lexical categories. Someone should be able to ask for that, and if done when not desired (e.g., after top 3 profiles), then there will be a lot of going back on that decision manually.
-- I think adding frames doesn't need to be in the sorting logic. "Next" (DOENS'T, but should) provide that, as does selecting "New Frame".
+- I think adding frames doesn't need to be in the sorting logic. "Next" (DOESN'T, but should) provide that, as does selecting "New Frame".
 
 ## current errors:
 clean up words whose forms didn't get set.
@@ -104,7 +104,7 @@ select which profiles to include in a given tone report
 -scrolling left to right
 add python3 -m pip install mercurial to docs
 maybe make tone report work off of examples present, rather than tone frames?
-think through commits to hg, including merge with paitence, and which files should be added automatically.
+think through commits to hg, including merge with patience, and which files should be added automatically.
 
 At this point, this is just a bunch of random notes on stuff I need to follow up on:
 

@@ -41,7 +41,7 @@ def praatopen(program,file,newpraat=False,event=None):
             praatargs=[program['praat'], '--open', file]
         subprocess.Popen(praatargs,shell=False) #not run; continue here
     else:
-        log.info("Looks like I couln't find Praat...")
+        log.info("Looks like I couldn't find Praat...")
 if __name__ == "__main__":
     try:
         _
