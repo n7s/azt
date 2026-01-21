@@ -22,14 +22,15 @@ import platform
 program['hostname']=platform.uname().node
 import py_modules #This tries importing, and installs on failure
 import file
-if False and file.getfile(__file__).parent.parent.stem == 'raspy': # if program['hostname'] == 'karlap':
+if file.getfile(__file__).parent.parent.stem == 'raspy': # if program['hostname'] == 'karlap':
     program['testing']=True #eliminates Error screens and zipped logs
+    program['production']=True #True for making screenshots (default theme)
     me=True
     loglevel='INFO'
     # program['testlift']='eng' #portion of filename
     program['testlift']='Demo_en' #portion of filename
     # program['testtask']='WordCollectnParse' #Will convert from string to class later
-    # program['testtask']='SortV' #Will convert from string to class later
+    program['testtask']='SortV' #Will convert from string to class later
 else:
     me=False
     program['production']=True #True for making screenshots (default theme)
@@ -1193,7 +1194,8 @@ class Menus(ui.Menu):
         if program['git']:
             # clonetoUSB should be called if updateazt doesn't have a source (incl internet)
             helpitems+=[(_("Update {azt}").format(azt=program['name']), updateazt)]
-            helpitems+=[(_("Share data to USB"), program['settings'].repo['git'].share)]
+            if 'git' in program['settings'].repo:
+                helpitems+=[(_("Share data to USB"), program['settings'].repo['git'].share)]
             if program['repo'].branch == 'main':
                 helpitems+=[(_("Try {azt} test version").format(azt=program['name']),
                                 self.parent.trytestazt)]
@@ -1822,6 +1824,7 @@ class StatusFrame(ui.Frame):
         self.profiles=['colheader']+profiles+['next']
         ungroups=0
         unsorted_icon='[X]'
+        dont_show=['NA']
         if program['settings'].showdetails:
             verified=_("verified")
             unsorted=_("unsorted")
@@ -1902,8 +1905,8 @@ class StatusFrame(ui.Frame):
                         if len(node['done']) > len(node['groups']):
                             ungroups+=1
                         #At this point, these should be there
-                        done=node['done']
-                        total=node['groups']
+                        done=[i for i in node['done'] if i not in dont_show]
+                        total=[i for i in node['groups'] if i not in dont_show]
                         tosort=node['tosort']
                         totalwverified=[]
                         nunverified=len(set(total)-set(done))
@@ -2131,6 +2134,9 @@ class Settings(object):
                                 }
     def settingsfile(self,setting):
         fileattr=self.settings[setting]['file']
+        legacy=fileattr+'_legacy'
+        if (hasattr(self,legacy) and file.exists(getattr(self,legacy))):
+            file.move(getattr(self,legacy), getattr(self,fileattr))
         if hasattr(self,fileattr):
             return getattr(self,fileattr)
         else:
@@ -2208,12 +2214,18 @@ class Settings(object):
                                                             self.liftfilename))
         # re.sub('\.','_', str(
         basename=file.getdiredurl(self.directory,self.liftnamebase)
-        self.defaultfile=basename.with_suffix('.CheckDefaults.ini')
+        self.defaultfile_legacy=basename.with_suffix(f'.CheckDefaults.ini')
+        self.defaultfile=basename.with_suffix(f'.{program["repo"].username}'
+                                                f'.{program["hostname"]}'
+                                                '.CheckDefaults.ini')
         self.toneframesfile=basename.with_suffix(".ToneFrames.dat")
         self.statusfile=basename.with_suffix(".VerificationStatus.dat")
         self.profiledatafile=basename.with_suffix(".ProfileData.dat")
         self.adhocgroupsfile=basename.with_suffix(".AdHocGroups.dat")
-        self.soundsettingsfile=basename.with_suffix(".SoundSettings.ini")
+        self.soundsettingsfile_legacy=basename.with_suffix(".SoundSettings.ini")
+        self.soundsettingsfile=basename.with_suffix(f'.{program["repo"].username}'
+                                                    f'.{program["hostname"]}'
+                                                    ".SoundSettings.ini")
         self.alphabetsettingsfile=basename.with_suffix(".Alphabet.ini")
         self.settingsbyfile() #This just sets self.settings
         for setting in self.settings:
@@ -2224,7 +2236,7 @@ class Settings(object):
                 if file.exists(legacy):
                     log.debug(_("But legacy file {legacy} does; converting!").format(legacy=legacy))
                     self.loadandconvertlegacysettingsfile(setting=setting)
-            if str(savefile).endswith('.dat') and file.exists(savefile):
+            if file.exists(savefile): #Keep around .ini and .dat
                 for r in self.repo:
                     self.repo[r].add(savefile)
         for r in self.repo:
@@ -4030,7 +4042,11 @@ class TaskDressing(HasMenus,ui.Window):
         if self.exitFlag.istrue() or not self.winfo_exists():
             return
         self.context.menuinit() #This is a ContextMenu() method
-        self.context.menuitem(_("Share data to USB"), 
+        if me:
+            self.context.menuitem(_("Change to another Database (Restart)"),
+                            program['taskchooser'].changedatabase)
+        if 'git' in program['settings'].repo:
+            self.context.menuitem(_("Share data to USB"), 
                                 program['settings'].repo['git'].share)
         if not hasattr(self,'menu') or not self.menu:
             self.context.menuitem(_("Show Menus"),self._setmenus)
@@ -5556,7 +5572,7 @@ class TaskChooser(TaskDressing):
             else:
                 self.maketask(WordCollectnParsewRecordings)
                 #optionlist[-1][0]) #last item, the code
-    def maketask(self,taskclass): #,filename=None
+    def maketask(self,taskclass,**kwargs): #,filename=None
         self.unsetmainwindow()
         try:
             if self.task.waiting():
@@ -5564,7 +5580,9 @@ class TaskChooser(TaskDressing):
             self.task.on_quit() #destroy and set flag
         except AttributeError:
             log.info(_("No task, apparently; not destroying."))
-        self.task=taskclass(self) #filename
+        if type(taskclass) is str:
+            taskclass=getattr(sys.modules[__name__],taskclass)
+        self.task=taskclass(self,**kwargs) #filename
         if not self.task.exitFlag.istrue():# and not isinstance(self.task,Parse):
             self.task.deiconify()
     def unsetmainwindow(self):
@@ -6325,11 +6343,11 @@ class Alphabet():
     def distinguish(self, g, **kwargs):
         self.distinguished_by_cvt().add(g)
     def undistinguish(self, g, **kwargs):
-        self.distinguished_by_cvt().remove(g)
+        self.distinguished_by_cvt().discard(g) #don't throw error on remove
     def undistinguish_any_with(self,g):
         d=self.distinguished_by_cvt()
         for j in [i for i in d if g in i]:
-            d.remove(j)
+            d.discard(j) #don't throw error on remove
     def predistinguish(self,tuple_set):
         """This is here to keep users from seeing trivial glyph distinction prompts.
         Trivial here is defined as:
@@ -6360,7 +6378,6 @@ class Alphabet():
                 self.distinguish(t)
             else:
                 log.info(_("Not distinguishing {glyph1} and {glyph2}").format(glyph1=gm[t[0]], glyph2=gm[t[1]]))
-                self.distinguish(t)
     def add_glyph_member(self,item,glyph):
         """This is sort into"""
         self.mark_glyph_not_done(glyph)
@@ -6477,9 +6494,12 @@ class Alphabet():
         2. We don't want to kick out groups that are already there.
         Let the user decide to do either, if necessary.        """
         glyph=self.parse_verificationcode(item)['group']
+        if glyph in self.conflicts and item in self.conflicts[glyph]:
+            log.error("Not presorting, since it looks like we kicked this one out already.")
+            return
         log.info(_("presort_item moving {item} into ‘{glyph}’").format(item=item, glyph=glyph))
         if not glyph.isdigit() and not self.conflicting_items(item,glyph):
-            self.mark_item_glyph(item,glyph)
+            self.mark_item_glyph(item,glyph) #This should never produce conflicts
     def have_only_distinguished_items(self,x,y):
         log.info(_("Running have_only_distinguished_items on {x} and {y}").format(x=x, y=y))
         gm=self.glyph_members()
@@ -6503,14 +6523,29 @@ class Alphabet():
                 r.append(i)
         return r
     def remove_conflicting_items(self,item,glyph):
+        """This doesn't currently update SortGlyphGroupButtonFrame, but should"""
         conflicts=self.conflicting_items(item,glyph)
+        if glyph in self.conflicts:
+            recurring_conflicts=set(conflicts) & self.conflicts[glyph]
+            self.conflicts[glyph]|=set(conflicts)
+        else:
+            recurring_conflicts=set()
+            self.conflicts[glyph]=set(conflicts)
+        if conflicts:
+            if recurring_conflicts:
+                text='\n'+_("This is the second time I've removed this item recently; "
+                "so I'm going to ask you to consider joining them now.")
+            else:
+                text=''
+            ErrorNotice(_("Removing {items} from ‘{glyph}’ to make room for {new}{text}"
+                        ).format(items=conflicts,glyph=glyph,new=item,text=text),
+                                wait=True)
         for i in conflicts:
-            ErrorNotice(_("Removing {item} from ‘{glyph}’ to make room for {new}").format(item=i,glyph=glyph,new=item),
-                        wait=True)
             self.remove_item_from_glyph(i)
+        return recurring_conflicts
     def mark_item_glyph(self,item,glyph):#maybe move to Alphabet Sort
         self.rm_glyph_member(item) # in case elsewhere
-        self.remove_conflicting_items(item,glyph) #other group from same check
+        recurring_conflicts=self.remove_conflicting_items(item,glyph) #other group from same check
         self.add_glyph_member(item,glyph)
         self.mark_item_macrosorted(item)
         if item in self.glyph_members()[glyph]:
@@ -6518,6 +6553,7 @@ class Alphabet():
         else:
             log.info(_("mark_item_glyph failed to add ‘{item}’ to ‘{glyph}’").format(item=item, glyph=glyph))
             # log.info(f"{self.glyph_members()=}")
+        return recurring_conflicts
     def remove_item_from_glyph(self,item,glyph=None):
         self.rm_glyph_member(item,glyph) # in case elsewhere
         self.cull_glyphdict() #without knowing glyph or cvt
@@ -6564,6 +6600,7 @@ class Alphabet():
         program['settings'].settingsobjects() #should do this more; can be redone!
         self.renew_items_tomacrosort()
         self.save_settings()
+        self.conflicts={} #keep track of what has been kicked out of a group before
 class AlphabetChart(alphabet_chart.OrderAlphabet):
     my_settings=[
                     'exids',
@@ -6795,7 +6832,7 @@ class Segments(Senses):
             if not scvalue:
                 scvalue=True
                 program['settings'].setupCVrxs() #costly; only when needed!
-        formvalue=sense.textvaluebyftypelang(self.ftype,self.analang)
+        form_ori=formvalue=sense.textvaluebyftypelang(self.ftype,self.analang)
         if not formvalue:
             log.info(_("updateformtoannotations didn't return a form value for "
                     "{id}, {check}, {ftype}, {ana}").format(id=sense.id, check=check, ftype=self.ftype, ana=self.analang))
@@ -6825,24 +6862,27 @@ class Segments(Senses):
                     program['settings'].addtoformstosearch(sense,f,formvalue)
                 if len(value)>1:
                     maybe_add_polygraph(value)
-                    
         else: #update to all annotations
             for check,value in annodict.items():
-                if self.check_with_conflicting_value(annodict,check):
+                if value in ['NA',None] or check.isdigit() or value.isdigit() :
+                    continue #don't make changes for NA checks
+                elif self.check_with_conflicting_value(annodict,check):
                     if not self.updateconflictwarned:
                         ErrorNotice('\n'.join([conflict_text,error_nb]))
                         self.updateconflictwarned=True
                     else:
                         log.error(conflict_text)
                     error=True
-                elif value in ['NA']:
-                    pass #don't make changes for NA checks
                 else:
-                    # log.info(f"updateformtoannotations {check}={value},{formvalue}")
+                    log.info(f"updateformtoannotations {check}={value},{formvalue}")
                     formvalue=self.rxdict.update(formvalue,check,value)
                     # log.info(f"updateformtoannotations {check}={value},{formvalue}")
         if not error:
             sense.textvaluebyftypelang(self.ftype,self.analang,formvalue)
+            if form_ori != formvalue:
+                key=max([int(i) for i in annodict.keys() if i.isdigit()]+[-1])+1
+                sense.annotationvaluebyftypelang(self.ftype,self.analang,
+                                                    str(key),form_ori)
         if write:
             self.maybewrite()
     def setitemgroup(self,item,check,group,**kwargs):
@@ -7008,6 +7048,8 @@ class Segments(Senses):
         self.rxdict=program['settings'].rxdict
 class Sound(object):
     """This holds all the Sound methods, mostly for playing."""
+    settings_attrs=['fs', 'sample_format',
+                    'audio_card_out']
     def donewpyaudio(self):
         try:
             self.pyaudio.terminate()
@@ -7045,9 +7087,7 @@ class Sound(object):
     def missingsoundattr(self):
         # log.info(dir(program['settings'].soundsettings))
         ss=program['settings'].soundsettings
-        for s in ['fs', 'sample_format',
-                    'audio_card_in',
-                    'audio_card_out']:
+        for s in self.settings_attrs:
             if hasattr(ss,s):
                 if s+'s' in ss.hypothetical and (getattr(ss,s)
                                                 not in ss.hypothetical[s+'s']):
@@ -7089,6 +7129,7 @@ class Sound(object):
         self.soundcheck()
 class Record(Sound): #TaskDressing
     """This holds all the Sound methods specific for Recording."""
+    settings_attrs=['audio_card_in']+Sound.settings_attrs
     def makelabelsnrecordingbuttons(self,parent,node,r,c):
         # log.info("Making buttons for {} (in {})".format(node,parent))
         t=node.formatted(self.analang,self.glosslangs)
@@ -8085,6 +8126,9 @@ class WordCollection(Segments):
     def __init__(self, parent):
         Segments.__init__(self,parent)
         self.dodone=False
+class Transcription(object):
+    def __init__(self):
+        pass
 class WordCollectionwRecordings(WordCollection,Record):
     def getinstructions(self):
         return _("Record a word in your language that goes with these "
@@ -9263,8 +9307,8 @@ class ToneFrameDrafter(ui.Window):
         return [(i,j) for (i,j) in opts if i]
     def getfieldtype(self,event=None):
         w=ui.Window(self,
-                        row=1,column=0,
-                        sticky='ew',
+                        # row=1,column=0,
+                        # sticky='ew',
                         padx=25,pady=25)
         w.title(_("Select which field to frame"))
         ui.ButtonFrame(w.frame,optionlist=self.fieldtypes(),
@@ -9407,8 +9451,8 @@ class ToneFrameDrafter(ui.Window):
         log.info("context: {}; lang: {}".format(context,lang))
         strings=self.promptstrings(lang,context)
         self.w=ui.Window(self,
-                        row=1,column=0,
-                        sticky='ew',
+                        # row=1,column=0,
+                        # sticky='ew',
                         padx=25,pady=25)
         if lang and context:
             self.w.title('{} {}'.format(context,lang))
@@ -10363,7 +10407,17 @@ class Sort(object):
             if category == 'skip':
                 category='NA'
         if macrosort:
-            program['alphabet'].mark_item_glyph(item, category)
+            recurring_conflicts=program['alphabet'].mark_item_glyph(item, category)
+            if recurring_conflicts:
+                kwargs=program['alphabet'].parse_verificationcode(item)
+                item_group=kwargs.pop('group')
+            for i in recurring_conflicts:
+                i_group=program['alphabet'].parse_verificationcode(i)['group']
+                program['status'].undistinguish((i_group,item_group),**kwargs)
+                program['status'].undistinguish((item_group,i_group),**kwargs)
+            if recurring_conflicts:
+                self.maybesort(firstrun=True)
+                return
         else:
             self.marksortgroup(item, category, nocheck=True) # that marking worked
         if category not in list(self.buttonframe.groupvars)+['NA']:
@@ -10450,7 +10504,9 @@ class Sort(object):
             item=self.presenttosort(current_list_fn()[0], macrosort=macrosort)
             # log.info("presenttosort done")
             if not self.runwindow.exitFlag.istrue() and item is not None:
-                self.sortselected(item, macrosort=macrosort)
+                r=self.sortselected(item, macrosort=macrosort)
+                if r: #on restarting to maybesort
+                    return
                 self.buttonframe.updatecounts()
         if macrosort: #generalize
             program['alphabet'].save_settings()
@@ -10479,6 +10535,7 @@ class Sort(object):
                 return
         done.remove(group)
         program['status'].verified(done)
+        self.reverifying=True
         self.runcheck()
     def verifyselected(self, macrosort=False):
         selected=self.buttonframe.get_selected()
@@ -10505,7 +10562,8 @@ class Sort(object):
                 program['status'].last('verify',update=True)
                 self.updatestatus(verified=verified,writestatus=True)
             self.maybewrite()
-        log.info("Running verify! macrosort={macrosort}".format(macrosort=macrosort))
+        log.info(f"Running verify! {macrosort=} {getattr(self,'reverifying',False)=} "
+                f"{type(getattr(self,'reverifying',False))=}")
         """verify group of items sorted into a glyph."""
         """Show items each in a row, users mark those that are different,
         and we remove that group designation from the item (so it
@@ -10556,7 +10614,8 @@ class Sort(object):
                 title.append(_("for ‘{check}’ (NOT {checkname})").format(check=check.replace('=','≠'), 
                                                             checkname=program['params'].cvcheckname()))
             else:
-                oktext=_('These all have the same {checkname}').format(checkname=checkname)
+                oktext=_('These all have the same {checkname} ({check})'
+                            ).format(checkname=checkname,check=check)
                 instructions=_("Read this list aloud. Click on any with a "
                             "different {checkname} sound.").format(checkname=checkname)
                 title.append(_("for ‘{check}’ ({checkname})").format(check=check, checkname=program['params'].cvcheckname()))
@@ -10567,10 +10626,6 @@ class Sort(object):
                 log.error(_("Not verifying tone examples which don't exist."))
                 return 
         # The title for this page changes by group, below.
-        if (n:=len(items)) == 1:
-            log.info(_("The {item_name} ‘{group}’ only has {n} example; verified.").format(item_name=item_name, group=group, n=n))
-            updatestatus(True) #on coming *in* with one
-            return 1
         program['status'].build()
         last=False
         if not items: #then remove the group
@@ -10589,11 +10644,12 @@ class Sort(object):
             log.info("Groups to verify: {groups}"
                         "".format(groups=self.groups(toverify=True)))
             return
-        elif len(items) == 1:
+        elif len(items) == 1 and not getattr(self,'reverifying',False):
             log.info(_("Group ‘{group}’ only has {count} example; marking verified and "
                     "continuing.").format(group=group,count=len(items)))
             updatestatus(True)
             return 1
+        self.reverifying=False
         self.getrunwindow(msg=_("preparing to verify the {item_name} ‘{group}’").format(item_name=item_name, group=group))
         titles=ui.Frame(self.runwindow.frame,
                         column=1, row=0, columnspan=1, sticky='w')
@@ -12269,11 +12325,13 @@ class SortV(Sort,Segments,TaskDressing):
                 'image':program['theme'].photo['V'], #self.cvt
                 'sticky':'ew'
                 }
-    def __init__(self, parent):
+    def __init__(self, parent, **kwargs):
         program['params'].cvt('V')
         TaskDressing.__init__(self,parent)
         Sort.__init__(self, parent)
         Segments.__init__(self,parent)
+        if g:=kwargs.get("redo_glyph"):
+            self.redo_joinglyphs(g)
 class SortC(Sort,Segments,TaskDressing):
     def taskicon(self):
         return 'iconC'#program['theme'].photo['iconC']
@@ -12290,11 +12348,13 @@ class SortC(Sort,Segments,TaskDressing):
                 'image':program['theme'].photo['C'], #self.cvt
                 'sticky':'ew'
                 }
-    def __init__(self, parent):
+    def __init__(self, parent, **kwargs):
         program['params'].cvt('C')
         TaskDressing.__init__(self,parent)
         Sort.__init__(self, parent)
         Segments.__init__(self,parent)
+        if g:=kwargs.get("redo_glyph"):
+            self.redo_joinglyphs(g)
 class SortT(Sort,Tone,TaskDressing):
     def taskicon(self):
         return 'iconT'#program['theme'].photo['iconT']
@@ -12596,7 +12656,8 @@ class TranscribeS(Transcribe,Segments):
         log.info("Transcribe done for now (going back)")
         self.runwindow.on_quit()
         self.donewpyaudio()
-        self.parent.redo_joinglyphs(self.group)
+        program['taskchooser'].maketask(f"Sort{program['params'].cvt()}",
+                                        redo_glyph=self.group)
     def set_ok_w_form(self,error=False):
         form=self.transcriber.formfield.get()
         self.oktext.set(_("OK: use ‘{form}’ for this sound").format(form=form))
@@ -12605,6 +12666,7 @@ class TranscribeS(Transcribe,Segments):
         else:
             self.ok_button['state'] = 'disabled'
     def makewindow(self, glyph=None, event=None):
+        self.pyaudiocheck() # seems to dissapear sometimes
         self.ok_done=False
         if glyph:
             self.group=program['alphabet'].glyph(glyph)
@@ -13858,7 +13920,7 @@ class SortButtonFrame(ui.ScrollingFrame):
         else:
             name=program['params'].cvcheckname(self.check)
             firstOK=_("This word has {name}").format(name=name)
-        newgroup=_("Other")
+        newgroup=_("Other {check}").format(check=self.check if not self.macrosort else _("Letter"))
         skiptext=_("Skip this item")
         if '=' in self.check and not self.macrosort:
             skiptext+=f" ({self.check.replace('=','≠')})"
@@ -14280,6 +14342,7 @@ class SortGlyphGroupButtonFrame(ui.Frame,_GroupButtonFrame):
         kwargs['row']=0
         kwargs['gridwait']=True
         kwargs['var']=self.var()
+        # kwargs['playable']=True #This needs to apply with Sound...
         log.info(_("Ready to build SortGroupButtonFrame with {kwargs}").format(kwargs=kwargs))
         self.items.append(SortGroupButtonFrame(self, self.task, **kwargs))
         log.info(_("Built SGBF for {item} ({items})").format(item=item, items=self.items))
@@ -14332,7 +14395,7 @@ class SortGlyphGroupButtonFrame(ui.Frame,_GroupButtonFrame):
             # nodes=self.exs.getexamples(self.group)
             # log.info(_("Found {count} examples: {nodes}").format(count=len(nodes),nodes=nodes))
             self._n.set(len(self.items))
-        if self._n.get() <2:
+        if self._n.get() <2 and self.check_label.winfo_exists():
             self.check_label['state'] = 'disabled'
     def setcanary(self,canary):
         """This is needed because these buttons are reused across all words
@@ -15196,7 +15259,7 @@ class StatusDict(dict):
                         for check in d[cvt][ps][profile]
                         for i in d[cvt][ps][profile][check]['done']
                         if i not in ['NA']])
-                for cvt in d
+                for cvt in d if cvt != 'T'
                 }
     def all_groups_verified_for_cvt(self):
         return self.all_groups_verified_anywhere()[program['params'].cvt()]
@@ -15558,7 +15621,7 @@ class StatusDict(dict):
     def distinguish(self,g, **kwargs):
         self.distinguished(**kwargs).add(g)
     def undistinguish(self,g, **kwargs):
-        self.distinguished(**kwargs).remove(g)
+        self.distinguished(**kwargs).discard(g)
     def undistinguish_any_with(self,g, **kwargs):
         # log.info(f"calling self.undistinguish_any_with with {kwargs=}")
         # log.info(f"{self.distinguished(**kwargs)=}")
@@ -15853,28 +15916,28 @@ class CheckParameters(object):
             'V':{
                 1:[('V1', _("First Vowel"))],
                 2:[
-                    ('V1=V2', _("Same First Two Vowels")),
+                    ('V1=V2', _("First Two Same Vowels")),
                     ('V1xV2', _("Correspondence of First Two Vowels")),
                     ('V2', _("Second Vowel"))
                     ],
                 3:[
-                    ('V1=V2=V3', _("Same First Three Vowels")),
+                    ('V1=V2=V3', _("First Three Same Vowels")),
                     ('V3', _("Third Vowel")),
-                    ('V2=V3', _("Same Second and Third Vowels")),
+                    ('V2=V3', _("Second and Third Same Vowels")),
                     ('V2xV3', _("Correspondence of Second and Third Vowels"))
                     ],
                 4:[
-                    ('V1=V2=V3=V4', _("Same First Four Vowels")),
-                    ('V3=V4', _("Same Third and Fourth Vowels")),
+                    ('V1=V2=V3=V4', _("First Four Same Vowels")),
+                    ('V3=V4', _("Third and Fourth Same Vowels")),
                     ('V3xV4', _("Correspondence of Third and Fourth Vowels")),
                     ('V4', _("Fourth Vowel"))
                     ],
                 5:[
-                    ('V1=V2=V3=V4=V5', _("Same First Five Vowels")),
+                    ('V1=V2=V3=V4=V5', _("First Five Same Vowels")),
                     ('V5', _("Fifth Vowel"))
                     ],
                 6:[
-                    ('V1=V2=V3=V4=V5=V6', _("Same First Six Vowels")),
+                    ('V1=V2=V3=V4=V5=V6', _("First Six Same Vowels")),
                     ('V6', _("Sixth Vowel"))
                     ]
                 },
@@ -15882,26 +15945,26 @@ class CheckParameters(object):
                 1:[('C1', _("First/only Consonant"))],
                 2:[
                     ('C2', _("Second Consonant")),
-                    ('C1=C2',_("Same First/only Two Consonants")),
-                    ('C1xC2', _("Correspondence of First/only Two Consonants"))
+                    ('C1=C2',_("First Two Same Consonants")),
+                    ('C1xC2', _("Correspondence of First Two Consonants"))
                     ],
                 3:[
-                    ('C2=C3',_("Same Second Two Consonants")),
-                    ('C2xC3', _("Correspondence of Second Two Consonants")),
+                    ('C2=C3',_("Second and Third Same Consonants")),
+                    ('C2xC3', _("Correspondence of Second and Third Consonants")),
                     ('C3', _("Third Consonant")),
-                    ('C1=C2=C3',_("Same First Three Consonants"))
+                    ('C1=C2=C3',_("First Three Same Consonants"))
                     ],
                 4:[
                     ('C4', _("Fourth Consonant")),
-                    ('C1=C2=C3=C4',_("Same First Four Consonants"))
+                    ('C1=C2=C3=C4',_("First Four Same Consonants"))
                     ],
                 5:[
                     ('C5', _("Fifth Consonant")),
-                    ('C1=C2=C3=C4=C5',_("Same First Five Consonants"))
+                    ('C1=C2=C3=C4=C5',_("First Five Same Consonants"))
                     ],
                 6:[
                     ('C6', _("Sixth Consonant")),
-                    ('C1=C2=C3=C4=C5=C6',_("Same First Six Consonants"))
+                    ('C1=C2=C3=C4=C5=C6',_("First Six Same Consonants"))
                     ]
                 },
             'CV':{
@@ -16103,6 +16166,11 @@ class Repository(object):
             log.info(_("Me not committing when asked to by {name}").format(
                                                             name=program['name']))
             return True
+    def commit_would_conflict(self):
+        pass
+        """git fetch origin
+        git merge --no-commit <branch>
+        git merge --abort"""
     def commit(self,file=None):
         #I may need to rearrange these args:
         if self.bare or self.code == 'hg': #don't commit here, at least for now
@@ -16117,11 +16185,20 @@ class Repository(object):
         for d in [diff,diffcached]:
             if d:
                 difftext+=d
+        if '=======' in difftext:
+            ErrorNotice(f"Merge needs to happen! {difftext}",wait=True)
+            return
         if difftext and (not me or self.commitconfirm(difftext)):
             r=self.do([i for i in args if i is not None])
             return r
         # if there's no diff, or I don't want to commit, still share commits:
         return True
+    def checkout_new_branch(self,branchname=None):
+        if not branchname:
+            branchname=f"work_from_{self.username}"
+        args=['checkout', '-b', branchname]
+        r=self.do([i for i in args if i is not None])
+        return r
     def diff(self,cached=False):
         if not self.bare:
             args=['diff']
@@ -16483,11 +16560,14 @@ class Repository(object):
         # else:
         #     log.info(_("URL {url} is not already in repo {repo}:\n{files}"
         #                 "").format(url=url,repo=self.url,files=self.files))
-    def ignore(self,file):
-        if not hasattr(self,'ignored') or file not in self.ignored:
-            with open(self.ignorefile,'a') as f:
-                f.write(file+'\n')
-            self.getignorecontents() #make sure this is up to date
+    def ignore(self,expression):
+        if not hasattr(self,'ignored') or expression not in self.ignored:
+            self.ignored.append(expression)
+            self.write_ignore_contents()
+    def unignore(self,expression):
+        if hasattr(self,'ignored') and expression in self.ignored:
+            self.ignored.remove(expression)
+            self.write_ignore_contents()
     def ignorecheck(self):
         self.ignorefile=file.getdiredurl(self.url,'.'+self.code+'ignore')
         self.getignorecontents() #make sure this is up to date
@@ -16504,6 +16584,10 @@ class Repository(object):
             # log.info("self.ignored for {} now {}".format(self.code,self.ignored))
         except FileNotFoundError as e:
             log.info(_("Hope this is OK: {error}").format(error=e))
+    def write_ignore_contents(self):
+        with open(self.ignorefile,'w') as f:
+            for i in self.ignored:
+                f.write(i+'\n')
     def exists(self,f=None):
         if not f:
             f=self.deltadir
@@ -16569,23 +16653,24 @@ class Repository(object):
         w.lift()
     def getusernameargs(self):
         #This populates self.usernameargs, once per init.
-        re=None
-        r=self.do(self.argstogetusername)
+        self.useremail=None
+        self.username=self.do(self.argstogetusername)
         if hasattr(self,'argstogetuseremail'):
-            re=self.do(self.argstogetuseremail)
-        if r:
-            log.info(_("Using {repo} username '{name}'").format(repo=self.repotypename,name=r))
-            if re:
-                log.info(_("Using {repo} useremail '{email}'").format(repo=self.repotypename,email=re))
+            self.useremail=self.do(self.argstogetuseremail)
+        if self.username:
+            log.info(_("Using {repo} username '{name}'").format(repo=self.repotypename,
+                                                                name=self.username))
+            if self.useremail:
+                log.info(_("Using {repo} useremail '{email}'").format(repo=self.repotypename,email=self.useremail))
         else:
-            r=program['name']+'-'+program['hostname']
+            self.username=program['name']+'-'+program['hostname']
             log.info(_("No {repo} username found; using '{name}'"
-                    "").format(repo=self.repotypename,name=r))
-        if not re:
-            re=program['name']+'@'+program['hostname']
+                    "").format(repo=self.repotypename,name=self.username))
+        if not self.useremail:
+            self.useremail=program['name']+'@'+program['hostname']
             log.info(_("No {repo} useremail found; using '{email}'"
-            "").format(repo=self.repotypename,email=re))
-        self.usernameargs=self.argstoputuserids(r,re)
+            "").format(repo=self.repotypename,email=self.useremail))
+        self.usernameargs=self.argstoputuserids(self.username,self.useremail)
     def addUSBremote(self):
         # This should be a directory (or parent) with existing repo
         self.addremote(self.clonetobaredirname())
@@ -16673,6 +16758,9 @@ class Repository(object):
                         desc=self.description, count=len(self.files)))
     def abs_path(self,url):
         log.info(f"abs_path given {url}")
+        if not url:
+           log.info(f"returning nothing for nothing: {url} ({type(url)})") 
+           return
         try:
             log.info(f"abs_path returning {url.resolve()} "
                     f"({str(url.resolve())})")
@@ -16711,6 +16799,7 @@ class Repository(object):
             self.exewarning()
             return #before getting a file list!
         self.populate() #get files, etc.
+        # self.pull() # in case there's a source available
 class Mercurial(Repository):
     def ignorelist(self):
         return ['*.pdf','*.xcf',
@@ -16790,7 +16879,7 @@ class Git(Repository):
                 '*.WeSayUserConfig',
                 '*.ChorusRescuedFile',
                 '*.git',
-                '*.ini',
+                # '*.ini',
                 # '*lift.*',
                 '*.lift*txt',
                 ]
@@ -16883,6 +16972,7 @@ class Git(Repository):
         self.bareclonearg='--bare'
         self.nonbareclonearg=''
         super(Git, self).__init__(url)
+        self.unignore('*.ini') #used to ignore this
         self.mark_safe()
 class GitReadOnly(Git):
     def exewarning(self):
@@ -16918,7 +17008,6 @@ class GitReadOnly(Git):
             for remote in remotes:
                 r[remote+'/'+self.branch]=method(self,remotes=[remote])
         return r
-        """I'm going to need to stash and stash apply here, I think"""
         remotes=self.findpresentremotes() #do once
         if not remotes:
             return
@@ -16964,11 +17053,13 @@ class GitReadOnly(Git):
         pass
     def setdescription(self):
         self.description=_("AZT source")
+    def unignore(self,expression):
+        pass #don't mess with this repo!
     def __init__(self, url):
         super(GitReadOnly, self).__init__(url)
 class ResultWindow(ui.Window):
     def __init__(self, parent, msg=None, title=None):
-        """Can't test for widget/window if the attribute hasn't been assigned,"
+        """Can't test for widget/window if the attribute hasn't been assigned,
         but the attribute is still there after window has been killed, so we
         need to test for both."""
         if title is None:
@@ -17064,7 +17155,7 @@ def interfacelang(lang=None,magic=False):
     except NameError:
         log.debug("Looks like translation magic isn't defined yet; making")
     if lang:
-        log.info("Asked to set lang {lang} with curlang {curlang}").format(lang=lang,curlang=curlang)
+        log.info("Asked to set lang {lang} with curlang {curlang}".format(lang=lang,curlang=curlang))
     if not lang and not curlang: #deduce, but don't override current setting.
         # log.info("checking for a local setting")
         code=file.uilang()
@@ -17911,11 +18002,6 @@ if __name__ == '__main__':
     #     program['python']=program.pop('python3')
     # if not program['python']:
     program['python']=sys.executable
-    if 'testtask' in program and type(program['testtask']) is str:
-        log.info(_("Converting string ‘{task}’ to class").format(task=program['testtask']))
-        program['testtask']=getattr(sys.modules[__name__],
-                                        program['testtask'])
-    # i18n['fub'] = gettext.azttranslation('azt', transdir, languages=['fub'])
     if exceptiononload and not me:
         pythonmodules()
         # sysrestart()

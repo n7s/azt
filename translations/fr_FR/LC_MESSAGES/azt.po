@@ -299,7 +299,7 @@ msgstr "<word>"
 #: /home/kentr/bin/raspy/azt/main.py:9103
 #, python-brace-format
 msgid "<{lang} word>"
-msgstr "< Mots{lang}>"
+msgstr "< Mots {lang} >"
 
 #: /home/kentr/bin/raspy/azt/main.py:12808
 msgid "A label that describes the surface tone form in this context would be best, like ‘[˥˥˥ ˨˨˨]’"
@@ -3245,8 +3245,8 @@ msgid "Or a problem with your database."
 msgstr "Ou un problème avec votre base de données."
 
 #: /home/kentr/bin/raspy/azt/main.py:13775
-msgid "Other"
-msgstr "Autres"
+msgid "Other {check}"
+msgstr "Autre {check}"
 
 #: /home/kentr/bin/raspy/azt/main.py:12836
 msgid "Other Groups:"
@@ -3707,6 +3707,10 @@ msgstr "Suppression du sens {id} de la sous-vérification {group}"
 msgid "Removing {item} from ‘{glyph}’ to make room for {new}"
 msgstr "Retirer {item} de ‘{glyph}’ pour faire de la place pour {new}"
 
+msgid "This is the second time I've removed this item recently; "
+"so I'm going to ask you to consider joining them now."
+msgstr "C'est maintenant la deuxieme fois que j'ai supprimé cet element; "
+"donc je vais vous demander de considérer de les joindre maintenant."
 #: /home/kentr/bin/raspy/azt/main.py:12549
 msgid "Rename"
 msgstr "Renommer"
@@ -3880,79 +3884,79 @@ msgid "Same"
 msgstr "Même chose"
 
 #: /home/kentr/bin/raspy/azt/main.py:15812
-msgid "Same First Five Consonants"
-msgstr "Même les cinq premiers Consonants"
+msgid "First Five Same Consonants"
+msgstr "les cinq premiers et même Consonants"
 
 #: /home/kentr/bin/raspy/azt/main.py:15785
-msgid "Same First Five Vowels"
-msgstr "Même les cinq premiers vowels"
+msgid "First Five Same Vowels"
+msgstr "les cinq premiers et même Vowels"
 
 #: /home/kentr/bin/raspy/azt/main.py:15808
-msgid "Same First Four Consonants"
-msgstr "Même les quatre premiers Consonants"
+msgid "First Four Same Consonants"
+msgstr "les quatre premiers et même Consonants"
 
 #: /home/kentr/bin/raspy/azt/main.py:15779
-msgid "Same First Four Vowels"
-msgstr "Même les quatre premiers vowels"
+msgid "First Four Same Vowels"
+msgstr "les quatre premiers et même Vowels"
 
 #: /home/kentr/bin/raspy/azt/main.py:15816
-msgid "Same First Six Consonants"
-msgstr "Même les six premiers Consonants"
+msgid "First Six Same Consonants"
+msgstr "les six premiers et même Consonants"
 
 #: /home/kentr/bin/raspy/azt/main.py:15789
-msgid "Same First Six Vowels"
-msgstr "Même les six premiers vowels"
+msgid "First Six Same Vowels"
+msgstr "les six premiers et même Vowels"
 
 #: /home/kentr/bin/raspy/azt/main.py:15804
-msgid "Same First Three Consonants"
-msgstr "Même Premières Trois Consonnes"
+msgid "First Three Same Consonants"
+msgstr "les trois premiers et même Consonants"
 
 #: /home/kentr/bin/raspy/azt/main.py:15773
-msgid "Same First Three Vowels"
-msgstr "Même les trois premiers vowels"
+msgid "First Three Same Vowels"
+msgstr "les trois premiers et même Vowels"
 
 #: /home/kentr/bin/raspy/azt/main.py:15768
-msgid "Same First Two Vowels"
-msgstr "Même les deux premiers vowels"
+msgid "First Two Same Vowels"
+msgstr "les deux premiers et même Vowels"
 
 #: /home/kentr/bin/raspy/azt/main.py:15841
 #: /home/kentr/bin/raspy/azt/main.py:15867
-msgid "Same First/only Five CVs"
-msgstr "Même premier/seul cinq CV"
+msgid "First Five CVs"
+msgstr "les cinq premiers CVs"
 
 #: /home/kentr/bin/raspy/azt/main.py:15837
 #: /home/kentr/bin/raspy/azt/main.py:15863
-msgid "Same First/only Four CVs"
-msgstr "Même premier/seul quatre CV"
+msgid "First Four CVs"
+msgstr "les même premier/seul quatre CV"
 
 #: /home/kentr/bin/raspy/azt/main.py:15845
 #: /home/kentr/bin/raspy/azt/main.py:15871
 msgid "Same First/only Six CVs"
-msgstr "Même premier/seul les six CV"
+msgstr "les même premier/seul les six CV"
 
 #: /home/kentr/bin/raspy/azt/main.py:15833
 msgid "Same First/only Three CVs"
-msgstr "Même Premier/seulement Trois CVs"
+msgstr "les même premier/seul Trois CVs"
 
 #: /home/kentr/bin/raspy/azt/main.py:15828
 msgid "Same First/only Two CVs"
-msgstr "Même Premier/seulement Deux CV"
+msgstr "les même premier/seul Deux CVs"
 
 #: /home/kentr/bin/raspy/azt/main.py:15797
-msgid "Same First/only Two Consonants"
-msgstr "Même Première/Seule Deux Consonnes"
+msgid "Same First Two Same Consonants"
+msgstr "les même premier Deux et même Consonnes"
 
 #: /home/kentr/bin/raspy/azt/main.py:15801
 msgid "Same Second Two Consonants"
-msgstr "Même Deuxieme Deux Consonnes"
+msgstr "les même Deuxieme Deux Consonnes"
 
 #: /home/kentr/bin/raspy/azt/main.py:15775
 msgid "Same Second and Third Vowels"
-msgstr "Même deuxième et troisième vowels"
+msgstr "les même deuxième et troisième vowels"
 
 #: /home/kentr/bin/raspy/azt/main.py:15780
 msgid "Same Third and Fourth Vowels"
-msgstr "Même Troisième et Quatrième Vowels"
+msgstr "les même troisième et quatrième vowels"
 
 #: /home/kentr/bin/raspy/azt/main.py:5305
 msgid "Saving settings for next time"
@@ -4845,8 +4849,8 @@ msgstr "Tous ces éléments n'ont PAS {checkname}"
 
 #: /home/kentr/bin/raspy/azt/main.py:10473
 #, python-brace-format
-msgid "These all have the same {checkname}"
-msgstr "Tous ces éléments ont le même {checkname}"
+msgid "These all have the same {checkname} ({check})"
+msgstr "Tous ces éléments ont tous le même {checkname} ({check})"
 
 #: /home/kentr/bin/raspy/azt/main.py:10447
 msgid "These all should use the same letter"
@@ -5161,7 +5165,7 @@ msgstr "Cela ajoutera des entrées de la Comparative African Wordlist (CAWL) qui
 
 #: /home/kentr/bin/raspy/azt/main.py:13771
 msgid "This word fits in this frame"
-msgstr "Ce mot s'inscrit dans ce cadre"
+msgstr "Ce mot se prononce dans ce cadre"
 
 #: /home/kentr/bin/raspy/azt/main.py:13774
 #, python-brace-format
@@ -5637,7 +5641,7 @@ msgstr "Comment voulez-vous appeler ce groupe pour trier les mots {ps}?"
 #: /home/kentr/bin/raspy/azt/main.py:9294
 #, python-brace-format
 msgid "What do you want to call this new {ps} tone frame for {lang}?"
-msgstr "Comment voulez-vous appeler cette nouvelle image de tonalité {ps} pour {lang}?"
+msgstr "Comment voulez-vous appeler cette nouvelle cadre de tonalité {ps} pour {lang}?"
 
 #: /home/kentr/bin/raspy/azt/main.py:792
 msgid "What do you want to work on?"
@@ -6981,7 +6985,7 @@ msgstr "travail sur {glyph} de {digits}"
 #: /home/kentr/bin/raspy/azt/main.py:1441
 #, python-brace-format
 msgid "working on ‘{check}’ tone frame"
-msgstr "travail sur le cadre de tonalité ‘{check}’"
+msgstr "travailer sur le cadre de tonalité ‘{check}’"
 
 #: /home/kentr/bin/raspy/azt/main.py:2752
 #, python-brace-format

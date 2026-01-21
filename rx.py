@@ -324,7 +324,8 @@ class RegexDict(object):
         # Convert those value lists to a string of alternations, for each key
         #This needs to multiply as a unit, while getting each subpart separately:
         nocap={'nocapture':True}
-        oneS=group(group(sout, **nocap) + '*?' + group(sin, **nocap), **nocap)
+        # one or more of the sout possiblities, be greedy
+        oneS=group(group(sout, **nocap) + '*' + group(sin, **nocap), **nocap)
         # log.info(f"oneS: {oneS}")
         #We need to keep each alternation set a unit, and keep all but last in \1
         if n-1:
@@ -332,7 +333,8 @@ class RegexDict(object):
         else:
             priors=''
         # only this one (last) group should ever capture:
-        nS=group(priors + group(sout, **nocap) + '*?') + group(sin)
+        # one or more of the sout possiblities, be greedy
+        nS=group(priors + group(sout, **nocap) + '*') + group(sin)
         if nxisfinal:
             nS=anchor(nS,anchorend=True)
         else: #anchor the beginning, not the end:
@@ -369,11 +371,8 @@ class RegexDict(object):
         # log.info("updated {} > {}".format(tori,t))
         for match in matches:
             if len(match)>1:
-                txt=_("NOTICE: we just matched (to remove) a set of "
-                f"symbols representing one sound ({match}). Until you are done "
-                "with it, we will leave it there, so both forms will be "
-                "found. Once you are done with it, remove it from the "
-                "polygraph settings.")
+                txt=_("NOTICE: ‘{match}’ was removed from this form. Remove it from the "
+                "polygraph settings once it is gone altogether.")
                 try:
                     log.info(txt)
                 except NameError:
@@ -446,7 +445,7 @@ class RegexDict(object):
                                     self.undistinguished(i,**kwargs),
                                     **{**kwargs, 'compile': False,
                                                 'nocapture': True})
-                                if r in ['()','(?:)']:
+                                if r in ['()','(?:)']: # empty, capturing or not
                                     # log.info(f"r is {r}, so returning empty")
                                     return r #don't add to nothing
                                 # log.info(f"r is {r} {type(r)}; continuing")
@@ -501,7 +500,7 @@ class RegexDict(object):
         self.rx[s+str(n)]=make(nS, compile=True)
     def setrx(self, c, crx, **kwargs):
         polyn=kwargs.get('polyn') #put this in the correct place
-        if not crx or crx in ['()', '(?:)']:
+        if not crx or crx in ['()', '(?:)']: # empty, capturing or not
             return #don't make or store empty regexs; they match everywhere
         # log.info("Setting {} with {} value {}".format(c,polyn,crx))
         if len(c) == 1:
@@ -758,48 +757,50 @@ if __name__ == '__main__':
                 profilelegit=profilelegit,
                 profilesegments=profilesegments
     )
-    log.info(d.distinguish)
-    log.info(d.sdict)
-    log.info(d.glyphsforvariable('C+D'))
+    log.info(f"{d.distinguish=}")
+    log.info(f"{d.sdict=}")
+    log.info(f"{d.glyphsforvariable('C+D')=}")
     # exit()
-    log.info(d.interpret)
+    log.info(f"{d.interpret=}")
     log.info("distinguished Final (True): {}".format(d.distinguished('C',True,final=True)))
     log.info("distinguished Final (False): {}".format(d.distinguished('C',False,final=True)))
     log.info("distinguished (True): {}".format(d.distinguished('C',True,final=False)))
     log.info("distinguished (False): {}".format(d.distinguished('C',False,final=False)))
-    # d.interpreted('C',final="True")
-    # d.interpreted('V',final="True")
-    # d.interpreted('C',final="False")
-    # d.interpreted('V',final="False")
-    # exit()
-    for CVs in ['C'+str(i) for i in range(1,6)]:
-    # [
-    # 'CVCVC','CVCV','CVCVS','CVCCVC','CVCCCVC','CACV','CACCVC','CVC'
-    # # 'CaNCVC',
-    # # 'CaCV','CaCVʔ',
-    # # 'CaCVS','CaGVC'
-    # ]:
-        # print(d.rxuncompiled[CVs])
-        print('\n'+CVs,'\t(not)')
-        # r=d.fromCV(CVs, word=True, compile=True, caseinsensitive=True)
-        r=d.rx[CVs]
-        for w in [
-            # 'bambat','wambut','wambat',
-            # 'bablat','wabwut','wablwat','wabwlat',
-            # 'babat','wawut','walat',
-            'no', 'non', 'bon', 'bono', 'bonopo', 'bogon', 'bogono',
-            'nonomon', 'pokemon', 'mblano', 'mbwana', 'mpsyaka'
-            # "pa'at",'wapput','nappall',
-            # 'bamban','wambun','wama',
-            # 'bambay','wambuy','waya',
-            # 'bambal','wambul','wala','wal',
-            # 'wat','tat','taw','lat'
-                ]:
-            # print(type(r),r)
-            if bool(r.match(w)):
-                print(w,'>',d.update(w,CVs,'B'))
-            else:
-                print('\t'+w)#,r.match(w))
-    # s='ááààééèèííììóóòòúúùù'
-    # s2=makeprecomposed(s)
-    # print(s,s2)
+    log.info(f"{d.fromCV('CVCV',compile=False)}")
+    log.info(f"{d.rxuncompiled['C2']}")
+    log.info(f"{d.rxuncompiled['V2']}")
+    f='phyeimaka'
+    for i in range(4):
+        f=d.update(f,'V2','ɨ')
+        log.info(f'V2: {f}')# for CVs in ['C'+str(i) for i in range(1,6)]:
+    for i in range(6):
+        f=d.update(f,'C2','bh')
+        log.info(f'C2: {f}')
+    # for CVs in ['C'+str(i) for i in range(1,6)]:
+    # # [
+    # # 'CVCVC','CVCV','CVCVS','CVCCVC','CVCCCVC','CACV','CACCVC','CVC'
+    # # # 'CaNCVC',
+    # # # 'CaCV','CaCVʔ',
+    # # # 'CaCVS','CaGVC'
+    # # ]:
+    #     # print(d.rxuncompiled[CVs])
+    #     print('\n'+CVs,'\t(not)')
+    #     # r=d.fromCV(CVs, word=True, compile=True, caseinsensitive=True)
+    #     r=d.rx[CVs]
+    #     for w in [
+    #         # 'bambat','wambut','wambat',
+    #         # 'bablat','wabwut','wablwat','wabwlat',
+    #         # 'babat','wawut','walat',
+    #         'no', 'non', 'bon', 'bono', 'bonopo', 'bogon', 'bogono',
+    #         'nonomon', 'pokemon', 'mblano', 'mbwana', 'mpsyaka'
+    #         # "pa'at",'wapput','nappall',
+    #         # 'bamban','wambun','wama',
+    #         # 'bambay','wambuy','waya',
+    #         # 'bambal','wambul','wala','wal',
+    #         # 'wat','tat','taw','lat'
+    #             ]:
+    #         # print(type(r),r)
+    #         if bool(r.match(w)):
+    #             print(w,'>',d.update(w,CVs,'B'))
+    #         else:
+    #             print('\t'+w)#,r.match(w))
