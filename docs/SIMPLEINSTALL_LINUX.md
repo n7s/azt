@@ -16,7 +16,7 @@ Run the following commands:
 3. `cd;git clone https://github.com/kent-rasmussen/azt.git;cd -`
 
 ### Fonts
-Verify that you have [Charis SIL](https://software.sil.org/charis/) on your system by running the following command:
+Verify that you have [Charis](https://software.sil.org/charis/) on your system by running the following command:
 `fc-list|grep Charis`
 
 If that doesn't return any results, run the following command:

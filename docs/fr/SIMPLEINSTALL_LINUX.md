@@ -20,7 +20,7 @@ Exécutez les commandes suivantes :
 
 ### Polices
 
-Vérifiez que vous avez [Charis SIL](https://software.sil.org/charis/) sur votre système en exécutant la commande suivante : `fc-list|grep Charis`
+Vérifiez que vous avez [Charis](https://software.sil.org/charis/) sur votre système en exécutant la commande suivante : `fc-list|grep Charis`
 
 Si cela ne renvoie aucun résultat, exécutez la commande suivante : `sudo apt-get install fonts-sil-charis`
 

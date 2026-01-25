@@ -42,7 +42,7 @@ Avant de pouvoir [configurer A-Z+T pour une utilisation normale](#set-up-azt-for
 
 ## Polices
 
-Si vous n'avez pas encore [Charis SIL](https://software.sil.org/charis/) sur votre système, téléchargez et installez la version la plus récente à partir d' [ici](https://software.sil.org/downloads/r/charis/CharisSIL-6.001.zip) .
+Si vous n'avez pas encore [Charis](https://software.sil.org/charis/) sur votre système, téléchargez et installez la version la plus récente à partir sur [Charis](https://software.sil.org/downloads/r/charis/Charis-7.000.zip) .
 
 ## Configurer A-Z+T pour une utilisation normale
 

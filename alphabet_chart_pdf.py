@@ -19,16 +19,6 @@ except ImportError:
     REPORTLAB_AVAILABLE = False
     log.warning("ReportLab not installed. PDF generation will not work.")
 
-# FONTS = {
-#     'Charis SIL': {
-#         'regular': '/usr/share/fonts/truetype/charis/CharisSIL-Regular.ttf',
-#         'bold': '/usr/share/fonts/truetype/charis/CharisSIL-Bold.ttf'
-#     },
-#     'Andika': {
-#         'regular': '/usr/share/fonts/truetype/andika/Andika-Regular.ttf',
-#         'bold': '/usr/share/fonts/truetype/andika/Andika-Bold.ttf'
-#     }
-# }
 # enable font subdirectories:
 for i in list(TTFSearchPath):
     TTFSearchPath.append(i+'/*')
@@ -40,10 +30,10 @@ def register_fonts():
     # if font_name not in FONTS:
     #     return False
     try:
-        pdfmetrics.registerFont(TTFont('Charis-Regular', 'CharisSIL-Regular.ttf'))
-        pdfmetrics.registerFont(TTFont('Charis-Bold', 'CharisSIL-Bold.ttf'))
-        pdfmetrics.registerFont(TTFont('Charis-Italic', 'CharisSIL-Italic.ttf'))
-        pdfmetrics.registerFont(TTFont('Charis-BoldItalic', 'CharisSIL-BoldItalic.ttf'))
+        pdfmetrics.registerFont(TTFont('Charis-Regular', 'Charis-Regular.ttf'))
+        pdfmetrics.registerFont(TTFont('Charis-Bold', 'Charis-Bold.ttf'))
+        pdfmetrics.registerFont(TTFont('Charis-Italic', 'Charis-Italic.ttf'))
+        pdfmetrics.registerFont(TTFont('Charis-BoldItalic', 'Charis-BoldItalic.ttf'))
         registerFontFamily('Charis',
                             normal='Charis-Regular',
                             bold='Charis-Bold',

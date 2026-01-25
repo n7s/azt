@@ -35,7 +35,7 @@ Before you can [Set up A-Z+T for normal use](#set-up-azt-for-normal-use), you ne
 2. In the `Git-Bash` terminal, paste `git clone https://github.com/kent-rasmussen/azt.git` and hit enter. This will give you an `azt` folder on your desktop, where the A-Z+T program files will stay.
 
 ## Fonts
-If you don't already have [Charis SIL](https://software.sil.org/charis/) on your system, download and install the most recent version from [here](https://software.sil.org/downloads/r/charis/CharisSIL-6.001.zip).
+If you don't already have [Charis](https://software.sil.org/charis/) on your system, download and install the most recent version from [Charis](https://software.sil.org/downloads/r/charis/Charis-7.000.zip).
 
 ## First Run of A−Z+T
 The first time you run A−Z+T, it will check that you have all the necessary python modules installed. If you don't, this isn't a problem, but it will take a moment and install them for you. If you run into problems installing pyaudio (especially ones including `Microsoft Visual C++`), it may help to run these two commands
